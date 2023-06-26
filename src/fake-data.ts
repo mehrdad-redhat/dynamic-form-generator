@@ -47,6 +47,11 @@ export const PAGES:Page[] = [
 				name:"accounted",
 			}
 		]
+	},
+	{
+		id:"p15n794",
+		name:"Empty",
+		elements:[]
 	}
 ]
 export async function getPages(){
@@ -57,10 +62,11 @@ export async function getPages(){
 	})
 }
 
-export async function getPage(index:number){
+export async function getPage(id:string){
 	return new Promise<Page>((resolve,reject)=>{
 		setTimeout(()=>{
-			resolve(PAGES[index])
+			const foundedPage = PAGES.find(page => page.id === id)
+			resolve(foundedPage!)
 		},2000)
 	})
 }

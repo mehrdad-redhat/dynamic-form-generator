@@ -4,13 +4,13 @@ import {useQuery} from '@tanstack/react-query'
 import {Button, Heading, Pane} from "evergreen-ui";
 import {createPage, getPages} from "../fake-data";
 
-const contactListQuery = () => ({
+const pageListQuery = () => ({
 	queryKey: ['pages', 'list', 'all'],
 	queryFn: () => getPages(),
 })
 
 const Root: React.FC = () => {
-	const {data:pages}= useQuery(contactListQuery());
+	const {data:pages}= useQuery(pageListQuery());
 	const navigation = useNavigation()
 	const navigate = useNavigate();
 	
