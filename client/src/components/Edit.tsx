@@ -48,6 +48,8 @@ const ButtonGroup = styled.div`
   align-items: center;
   column-gap: 8px;
   margin-top: 12px;
+  flex-wrap: wrap;
+  row-gap: 8px;
   #text{
     background-color: ${Swatch.textElementColor};
   }

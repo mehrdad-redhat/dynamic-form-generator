@@ -38,7 +38,6 @@ const Section = styled.div`
   row-gap: 8px;
 `
 export const SelectEl: React.FC<SelectElementProps> = ({element}) => {
-	console.log(element);
 	const [choices, setChoices] = React.useState<string[]>(element.choices || [])
 	return (
 		<Box>

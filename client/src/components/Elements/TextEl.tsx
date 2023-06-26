@@ -28,7 +28,6 @@ const CustomTextInputField = styled(TextInputField)`
 `
 
 export const TextEl: React.FC<TextElementProps> = ({element}) => {
-	console.log(element);
 	return (
 		<Box>
 			<div className='top'>

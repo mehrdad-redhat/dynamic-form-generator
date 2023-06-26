@@ -62,8 +62,7 @@ export const loader =
 const Page: React.FC = () => {
 	const params = useParams();
 	const {data: page} = useQuery(pageDetailQuery(params.pageId!))
-	if (page)
-		console.log(page.name)
+	
 	return (
 		<Container>
 			<CardWrapper paddingRight='16px !important'>

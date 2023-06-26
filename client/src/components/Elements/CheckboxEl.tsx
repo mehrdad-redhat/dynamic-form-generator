@@ -28,7 +28,6 @@ const CustomTextInputField = styled(TextInputField)`
 `
 
 export const CheckboxEl: React.FC<CheckboxElementProps> = ({element}) => {
-	console.log(element);
 	return (
 		<Box>
 			<div className="top">

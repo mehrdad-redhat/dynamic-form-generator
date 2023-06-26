@@ -48,13 +48,14 @@ export const Preview:React.FC<PreviewProps> = ({page}) => {
 									)
 								case ElementType.SELECT:
 									return (
-										<SelectField label={nameDecorate(el.name)}>
-											{el.choices!.map((o,index)=><option key={index} selected={index===0} value="sd">{nameDecorate(o)}</option>)}
+										<SelectField key={index} label={nameDecorate(el.name)} defaultValue={el.choices![0]}>
+											{el.choices!.map((o,index)=><option key={index} value="sd">{nameDecorate(o)}</option>)}
 										</SelectField>
 									)
 								case ElementType.RADIO:
 									return (
 										<RadioGroup
+											key={index}
 											label={nameDecorate(el.name)}
 											value={el.choices![0]}
 											options={el.choices!.map(ch=>{return {value:ch,label:nameDecorate(ch)}})}
