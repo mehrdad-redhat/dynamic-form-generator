@@ -8,8 +8,8 @@ mongoose.Promise = global.Promise;
 const mongooseOptions = {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	user:dbUserName,
-	authSource:dbAuthDB
+	// user:dbUserName,
+	// authSource:dbAuthDB
 };
 let mongooseURI = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbName}`;
 

@@ -6,14 +6,13 @@ function verifyName(req, res, next) {
 	if (!req.headers["authorization"])
 		return res.status(403).send({message: "No name provided in the header!"});
 
-	let name = req.headers["authorization"];
+	let userId = req.headers["authorization"];
 
-	User.findOne({name})
-		.exec((err, user) => {
-			if (err || !user) return res.status(401).send({message: "UnauthorizedError"});
-			req.userId = user._id;
-			return next();
-		});
+	User.findOne({_id:userId}).then(user=>{
+		if (!user) return res.status(401).send({message: "UnauthorizedError"});
+		req.userId = user._id;
+		return next();
+	});
 }
 
 module.exports = {

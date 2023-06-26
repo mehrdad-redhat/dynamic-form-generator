@@ -17,6 +17,10 @@ async function getAllPages(userId) {
 		
 }
 
+async function getSinglePage(pageId,userId) {
+	return Page.findOne({_id: pageId, owner: userId}).select('-createdAt -updatedAt')
+}
+
 /**
  * Edit a single page by id
  */
@@ -27,8 +31,7 @@ async function editPage(pageId, userId, bodyPage) {
 				owner: userId,
 				_id: pageId,
 			}, bodyPage, {new: true})
-			.exec((err, updatedPage) => {
-				if (err) return reject(err);
+			.then((updatedPage) => {
 
 				if (!updatedPage)
 					reject({
@@ -44,5 +47,6 @@ async function editPage(pageId, userId, bodyPage) {
 module.exports = {
 	createPage,
 	getAllPages,
+	getSinglePage,
 	editPage
 };

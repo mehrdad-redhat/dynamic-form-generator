@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const userController = require('../user/user.controller')
+const userController = require('./user.controller')
 const {duplicateCheck} = require('../_middleware');
 
 router.get('/test',(req, res, next) => {

@@ -25,6 +25,12 @@ function getAllPage(req, res, next) {
 	}).catch(next);
 }
 
+function getSinglePage(req, res, next) {
+	pageService.getSinglePage(req.params.id,req.userId).then(data => {
+		return res.status(200).send({data});
+	}).catch(next);
+}
+
 /**
  * Edit a single page by id
  */
@@ -34,13 +40,14 @@ function editPage(req, res, next) {
 		elements: req.body.elements
 	};
 
-	pageService.editPage(req.params.id, req.userId, editedPage).then(editedTool => {
-		return res.status(200).send({message: 'Page successfully updated'});
+	pageService.editPage(req.params.id, req.userId, editedPage).then(editedPage => {
+		return res.status(200).send({message: 'Page successfully updated',data: editedPage});
 	}).catch(next);
 }
 
 module.exports = {
 	createPage,
 	getAllPage,
+	getSinglePage,
 	editPage,
 };

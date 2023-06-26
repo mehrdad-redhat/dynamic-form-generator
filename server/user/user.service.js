@@ -15,11 +15,7 @@ async function signup(bodyUser) {
 
 async function login(name) {
 	return new Promise((resolve, reject) => {
-		User.findOne({name}).exec(async (err, user) => {
-			if (err) {
-				return reject(err);
-			}
-
+		User.findOne({name}).then(( user) => {
 			if (!user) {
 				return reject({
 					name: 'customError',

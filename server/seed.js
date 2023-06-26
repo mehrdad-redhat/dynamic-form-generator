@@ -11,8 +11,8 @@ mongoose.Promise = global.Promise;
 const mongooseOptions = {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	user:dbUserName,
-	authSource:dbAuthDB
+	// user:dbUserName,
+	// authSource:dbAuthDB
 };
 
 let mongooseURI = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbName}`;
@@ -30,11 +30,13 @@ mongoose.connect(mongooseURI, mongooseOptions).then(
 
 // user seed
 const defaultUser = {
+	_id:"t01",
 	name:'Test'
 }
 
 const defaultPage = {
 	name:"Employees",
+	owner:"t01",
 	elements:[
 		{
 			type:'text',
