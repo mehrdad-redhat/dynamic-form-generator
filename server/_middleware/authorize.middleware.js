@@ -2,7 +2,7 @@ const db = require("../_database");
 const User = db.User;
 
 
-function verifyToken(req, res, next) {
+function verifyName(req, res, next) {
 	if (!req.headers["authorization"])
 		return res.status(403).send({message: "No name provided in the header!"});
 
@@ -15,3 +15,7 @@ function verifyToken(req, res, next) {
 			return next();
 		});
 }
+
+module.exports = {
+	verifyName
+};
