@@ -11,7 +11,7 @@ function verifyToken(req, res, next) {
 	User.findOne({name})
 		.exec((err, user) => {
 			if (err || !user) return res.status(401).send({message: "UnauthorizedError"});
-			req.name = name;
+			req.userId = user._id;
 			return next();
 		});
 }
