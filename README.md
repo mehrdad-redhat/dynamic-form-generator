@@ -3,7 +3,30 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-This is a test project for Communery company interview assessment. It's developed with ReactJS, NodeJS and some other libraries for creating forms and handling server states.
+This is a test project for Communery company interview assessment. It's developed with ReactJS, NodeJS, MongoDB and some other libraries for creating forms and handling server states.
+
+## Requirements
+ - You need the MongoDB installed on your machine.
+ - If your MongoDB is secured and has a user, then you need to edit this lines in the root `/.env` file and put your DB credentials in there.
+    ```dotenv
+    NODE_ENV="development"
+    PORT=3001
+    DBNAME="form_gen_db"
+    DBUSER="admin" #<---
+    DBPASS="dbpass" #<---
+    DBAUTHDB="admin"
+    ```
+    After that open the `/server/_database/index.js` file and uncomment the following lines:
+    ```javascript
+   const mongooseOptions = {
+	        useNewUrlParser: true,
+	        useUnifiedTopology: true,
+	        // user: dbUserName, #<---
+	        // pass: dbPass, #<---
+        // authSource: dbAuthDB, #<---
+    };
+   ```
+ - If you're running the app for the first time you need to run the `npm run seed` to seed the initial data for database.
 
 ## Available Scripts
 

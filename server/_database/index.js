@@ -1,6 +1,7 @@
 const dbConfig = require('../app.config.json').database;
 const dbName = process.env.DBNAME;
 const dbUserName = process.env.DBUSER;
+const dbPass = process.env.DBPASS;
 const dbAuthDB = process.env.DBAUTHDB;
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -8,8 +9,9 @@ mongoose.Promise = global.Promise;
 const mongooseOptions = {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	// user:dbUserName,
-	// authSource:dbAuthDB
+	// user: dbUserName,
+	// pass: dbPass,
+	// authSource: dbAuthDB,
 };
 let mongooseURI = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbName}`;
 
