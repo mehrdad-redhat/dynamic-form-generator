@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import {ConditionType, ElementType} from "../models";
 import styled from "@emotion/styled";
 import {IconButton, SmallPlusIcon} from "evergreen-ui";
@@ -60,11 +60,12 @@ export const ConditionTypeFrame: React.FC<ConditionTypeFrameProps> = ({children,
 	<Frame elType={elType}>
 		<span className="title">{title(cType)}</span>
 		<IconButton
-			onClick={() => onAdd()}
+			onMouseUp={useCallback(onAdd, [cType, elType, onAdd])}
 			size='small'
 			icon={SmallPlusIcon} intent="success"/>
 		{(children as React.ReactNode[]).length !== 0 ? children : <span className='empty-box'>{emptyBox(cType)}</span>}
 	</Frame>
+	
 
 function title(cType: ConditionType) {
 	switch (cType) {

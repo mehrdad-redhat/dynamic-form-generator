@@ -1,11 +1,10 @@
 import * as React from 'react'
 import {useEffect} from 'react'
 import {NavLink, Outlet, useNavigate, useNavigation,} from 'react-router-dom'
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {Button, Heading, Pane} from "evergreen-ui";
-import {createPage} from "../fake-data";
 import {AuthGuard} from "../helpers/auth.guard";
-import {pageService} from "../services/page.service";
+import {PageService} from "../services/page.service";
 import {useUserStateContext} from '../contexts/user.context';
 import {userService} from "../services/user.service";
 
@@ -15,22 +14,28 @@ const Root: React.FC = () => {
 	const navigate = useNavigate();
 	const userContext = useUserStateContext();
 	const user = userService.getUserFromLocalStorage();
-	
+
 	useEffect(() => {
-		if(user)
-			userContext.dispatch({type:"SET_USER", payload: user})
+		if (user)
+			userContext.dispatch({type: "SET_USER", payload: user})
 	}, []);
 
-	const { isLoading, data: pages } = useQuery(
-		['pages'], 
-		() => pageService.getAllPages(),
+	const {isLoading, data: pages} = useQuery(
+		['pages'],
+		() => PageService.getAllPages(),
 		{
 			select: (data) => data.pages
 		}
 	);
+	const queryClient = useQueryClient();
 
 	const createNewPage = async () => {
-		const newPage = await createPage('New Page');
+		const newPage = await PageService.createPage({
+			name: 'New Page',
+			elements: []
+		});
+		queryClient.invalidateQueries(['pages']).then();
+		console.log(newPage);
 		navigate(`pages/${newPage._id}`);
 	}
 
@@ -40,11 +45,10 @@ const Root: React.FC = () => {
 		navigate('/login')
 	}
 
-	
-	
+
 	return (
 		<AuthGuard>
-			<section id='root-container'> 
+			<section id='root-container'>
 				<header>
 					<h1>Form Generator</h1>
 					<div id="profile">

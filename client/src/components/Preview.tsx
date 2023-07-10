@@ -195,11 +195,11 @@ export const Preview = React.forwardRef<HTMLFormElement>(
 )
 
 function conditionCheck(form:PreviewForm,conditions:Condition[]){
-	console.log(conditions)
+	// console.log(conditions)
 	if(!conditions|| conditions!.length===0)
 		return null
 	for(const condition of conditions){
-		console.log({value: form[condition.elementName], valueToCheck: condition.valueToPass})
+		// console.log({value: form[condition.elementName], valueToCheck: condition.valueToPass})
 		if(form[condition.elementName]===condition.valueToPass)
 			return true
 	}

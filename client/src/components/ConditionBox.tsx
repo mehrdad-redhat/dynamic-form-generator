@@ -16,7 +16,7 @@ type ConditionBoxProps = {
 	elIndex: number
 }
 
-const Container = styled.form`
+const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   row-gap: 18px;
@@ -58,13 +58,13 @@ export const ConditionBox: React.FC<ConditionBoxProps> = ({elIndex}) => {
 		updatePage({...page})
 	}
 	return (
-		<Container onClick={e => e.stopPropagation()} onSubmit={handleSubmit(onSubmit)}>
+		<FormContainer onClick={e => e.stopPropagation()} onSubmit={handleSubmit(onSubmit)}>
 			{
 				element.type===ElementType.TEXT &&
 				<ConditionTypeFrame cType={ConditionType.REQUIRED}
 				                    elType={element.type}
-				                    onAdd={() => requiredAppend({elementName:'',valueToPass:'value to pass'})}>
-					{requiredFileds.map((field, index) => <ConditionElement key={field.id}
+				                    onAdd={() => requiredAppend({elementName:'',valueToPass:''})}>
+					{requiredFileds.map((field, index) => <ConditionElement key={field.id+'requ'}
 					                                                        cType={ConditionType.REQUIRED}
 					                                                        {...{control, index, field}}
 					                                                        onRemove={() => {
@@ -77,7 +77,7 @@ export const ConditionBox: React.FC<ConditionBoxProps> = ({elIndex}) => {
 			<ConditionTypeFrame cType={ConditionType.VISIBLE}
 			                    elType={element.type}
 			                    onAdd={() => visibleAppend({elementName:'',valueToPass:''})}>
-				{visibleFileds.map((field, index) => <ConditionElement key={field.id}
+				{visibleFileds.map((field, index) => <ConditionElement key={field.id+'visible'}
 				                                                       cType={ConditionType.VISIBLE}
 				                                                       {...{control, index, field}}
 				                                                       onRemove={() => {
@@ -89,7 +89,7 @@ export const ConditionBox: React.FC<ConditionBoxProps> = ({elIndex}) => {
 			<ConditionTypeFrame cType={ConditionType.EDITABLE}
 			                    elType={element.type}
 			                    onAdd={() => editableAppend({elementName:'',valueToPass:''})}>
-				{editableFileds.map((field, index) => <ConditionElement key={field.id}
+				{editableFileds.map((field, index) => <ConditionElement key={field.id+"edit"}
 				                                                        cType={ConditionType.EDITABLE}
 				                                                        {...{control, index, field}}
 				                                                        onRemove={() => {
@@ -98,7 +98,7 @@ export const ConditionBox: React.FC<ConditionBoxProps> = ({elIndex}) => {
 				                                                        }}
 				                                                        elNameList={elementsNameList}/>)}
 			</ConditionTypeFrame>
-		</Container>
+		</FormContainer>
 	)
 }
 

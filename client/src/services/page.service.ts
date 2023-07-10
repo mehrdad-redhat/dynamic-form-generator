@@ -17,7 +17,7 @@ function editPage(id:string,edittedPage): Promise<Page> {
 }
 
 
-export const pageService = {
+export const PageService = {
 	getAllPages,
 	createPage,
 	getSinglePage,

@@ -7,7 +7,7 @@ import {useParams} from "react-router-dom";
 import Edit from "../components/Edit";
 import {Preview} from "../components/Preview";
 import {PageStateContextProvider} from "../contexts/page.context";
-import {pageService} from "../services/page.service";
+import {PageService} from "../services/page.service";
 import {Page as PageType} from "../models"
 
 const Container = styled(Pane)`
@@ -47,7 +47,7 @@ export const useSinglePageQuery = () => {
 	const {pageId} = useParams();
 	return useQuery(
 		['currentPage', pageId],
-		() => pageService.getSinglePage(pageId),
+		() => PageService.getSinglePage(pageId),
 	)
 };
 
@@ -56,7 +56,7 @@ export const usePageEditMutation = () => {
 	const {pageId} = useParams();
 	return useMutation(
 		{
-			mutationFn: (edittedPage: PageType) => pageService.editPage(pageId, {...edittedPage}),
+			mutationFn: (edittedPage: PageType) => PageService.editPage(pageId, {...edittedPage}),
 			onMutate: async (newPage) => {
 				// Optimistically update to the new value
 				let newPageData: PageType = {

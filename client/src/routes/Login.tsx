@@ -100,6 +100,7 @@ const Login: React.FC = () => {
 					isInvalid={!!errors!.name}
 					validationMessage={errors!.name?.message}
 					label="Hi, Enter your name to login"
+					description="If you're here for the first time, we'll register you automatically "
 					placeholder="name"
 					marginBottom={0}/>
 				<Button type="submit" appearance="primary">

@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 This is a test project for Communery company interview assessment. It's developed with ReactJS, NodeJS, MongoDB and some other libraries for creating forms and handling server states.
 
 ## Requirements
- - You need the MongoDB installed on your machine.
+ - You need the [MongoDB](https://www.mongodb.com/docs/manual/installation/) installed on your machine.
  - If your MongoDB is secured and has a user, then you need to edit this lines in the root `/.env` file and put your DB credentials in there.
     ```dotenv
     NODE_ENV="development"
