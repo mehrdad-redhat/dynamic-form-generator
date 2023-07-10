@@ -17,17 +17,14 @@ async function login(name) {
 	return new Promise((resolve, reject) => {
 		User.findOne({name}).then(( user) => {
 			if (!user) {
-				return reject({
-					name: 'customError',
-					message: 'name is incorrect..',
-					code: 400,
-				});
+				const newUser = new User({name})
+				resolve(newUser.save())
+			}else{
+				resolve({
+					_id: user._id,
+					name: user.name
+				});	
 			}
-			
-			resolve({
-				_id: user._id,
-				name: user.name
-			});
 		});
 	});
 

@@ -1,10 +1,12 @@
-import {TextElement} from "./TextEl";
-import {CheckboxElement} from "./CheckboxEl";
-import { SelectElement } from "./SelectEl";
-import {RadioElement} from "./RadioEl";
+import {RefObject} from "react";
 
 export {TextEl} from './TextEl';
 export {CheckboxEl} from './CheckboxEl';
 export {SelectEl} from './SelectEl';
 export {RadioEl} from './RadioEl';
-export type ElementComponent = TextElement | CheckboxElement | SelectElement | RadioElement
+
+export type ElementProps = {
+	elIndex: number,
+	formRef: RefObject<HTMLFormElement>,
+	onRemove?:(index: number)=>void
+}

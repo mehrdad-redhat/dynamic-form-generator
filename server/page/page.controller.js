@@ -10,9 +10,7 @@ function createPage(req, res, next) {
 		owner: req.userId,
 	};
 	pageService.createPage(page).then((data) => {
-		return res.status(201).send({message: 'Page successfully created',data:{
-				_id:data._id
-			}});
+		return res.status(201).send({message: 'Page successfully created',data});
 	}).catch(next);
 }
 
@@ -21,7 +19,7 @@ function createPage(req, res, next) {
  */
 function getAllPage(req, res, next) {
 	pageService.getAllPages(req.userId).then(data => {
-		return res.status(200).send({data});
+		return res.status(200).send({data:{pages:data}});
 	}).catch(next);
 }
 

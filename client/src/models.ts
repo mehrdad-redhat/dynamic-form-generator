@@ -4,17 +4,36 @@ export enum ElementType {
 	SELECT="select",
 	RADIO="radio"
 }
+
+export interface Condition{
+	elementName:string;
+	valueToPass:string;
+}
+
 export interface Element{
 	type: ElementType,
 	name: string,
 	choices?: string[],
-	requiredIf?: string,
-	visibleIf?: string,
-	editableIf?: string,
+	requiredIf?: Condition[],
+	visibleIf?: Condition[],
+	editableIf?: Condition[],
 }
 
 export interface Page{
-	id: string,
+	readonly _id: string,
+	readonly owner?: string,
 	name: string,
 	elements: Element[],
+}
+
+export interface User{
+	readonly _id:string,
+	name:string,
+}
+
+
+export enum ConditionType {
+	REQUIRED='requiredIf',
+	VISIBLE='visibleIf',
+	EDITABLE='editableIf',
 }

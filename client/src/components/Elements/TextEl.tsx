@@ -1,43 +1,73 @@
-import {Element, ElementType} from '../../models'
-import React from "react";
-import {TextInputField} from "evergreen-ui";
-import styled from "@emotion/styled";
-import {Swatch} from "../../theme";
-import {ElementBox} from "../ElementBox";
+import React, {useCallback} from "react";
+import {IconButton, TextInputField, TrashIcon} from "evergreen-ui";
+import {ElementBox, Label, Section} from "../ElementBox";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {ElementsEditForm} from "../Edit";
+import {usePageEditMutation, useSinglePageQuery} from "../../routes/page";
+import {ElementProps} from "./index";
+import {ConditionBox} from "../ConditionBox";
 
-export interface TextElement extends Omit<Element, 'type'> {
-	type: ElementType.TEXT
-}
+type TextElementEditForm = { name: string }
 
-interface TextElementProps {
-	element: TextElement
-}
+export const TextEl: React.FC<ElementProps> = ({elIndex, formRef, onRemove}) => {
 
-const Box = styled(ElementBox)`
-  background-color: ${Swatch.textElementColor};
-  display: flex;
-  flex-direction: column;
-  & > .top{
-    display: flex;
-    justify-content: space-between;
-  }
-`
+	const {data: page} = useSinglePageQuery()
+	const {mutateAsync: updatePage} = usePageEditMutation();
+	const element = page.elements[elIndex];
+	const {
+		register,
+		handleSubmit,
+		formState: {errors},
+	} = useForm<TextElementEditForm>({
+		defaultValues: {name: element.name}
+	});
 
-const CustomTextInputField = styled(TextInputField)`
-  background-color:rgba(255,255,255,0.75);
-`
+	const scrollToView = useCallback(
+		() => {
+			if (formRef.current) {
+				formRef.current.children[elIndex].scrollIntoView({behavior: 'smooth'});
+				formRef.current.children[elIndex].classList.add('pulse');
+				setTimeout(() => formRef.current.children[elIndex].classList.remove('pulse'), 4000)
+			}
+		},
+		[]
+	);
 
-export const TextEl: React.FC<TextElementProps> = ({element}) => {
+	const submit: SubmitHandler<ElementsEditForm> = (formData) => {
+		page.elements[elIndex] = {...page.elements[elIndex], ...formData};
+		updatePage({...page}).then(scrollToView)
+	}
+
+	const handleRemove = useCallback((e) => {
+		e.stopPropagation();
+		onRemove(elIndex);
+	}, [])
+
 	return (
-		<Box>
+		<ElementBox elType={element.type} onClick={scrollToView}>
 			<div className='top'>
-				<CustomTextInputField
-					label="Input Name"
-					defaultValue={element.name}
-					marginBottom={0}
-				/>
-				<span style={{color:'#a5a5a5',fontSize:'11px'}}>Text Field</span>
+				<form onSubmit={handleSubmit(submit)}>
+					<TextInputField
+						onClick={(e) => e.stopPropagation()}
+						{...register('name', {required: 'name is required!'})}
+						isInvalid={!!errors!.name}
+						validationMessage={errors!.name?.message}
+						label="Input Name"
+						marginBottom={0}
+						style={{width: 'auto'}}
+					/>
+				</form>
+				<span className="box-type">
+					<IconButton
+						onClick={handleRemove}
+						size='small'
+						icon={TrashIcon} intent="danger"/>
+					Text Field</span>
 			</div>
-		</Box>
+			<Section>
+				<Label>Conditions</Label>
+				<ConditionBox elIndex={elIndex}/>
+			</Section>
+		</ElementBox>
 	)
 }

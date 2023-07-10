@@ -2,7 +2,7 @@ import {ElementType, Page} from "./models";
 
 export const PAGES:Page[] = [
 	{
-		id:"p12n234",
+		_id:"p12n234",
 		name:"Employees",
 		elements:[
 			{
@@ -30,7 +30,7 @@ export const PAGES:Page[] = [
 		]
 	},
 	{
-		id:"p13n399",
+		_id:"p13n399",
 		name:"Companies",
 		elements:[
 			{
@@ -49,7 +49,7 @@ export const PAGES:Page[] = [
 		]
 	},
 	{
-		id:"p15n794",
+		_id:"p15n794",
 		name:"Empty",
 		elements:[]
 	}
@@ -65,7 +65,7 @@ export async function getPages(){
 export async function getPage(id:string){
 	return new Promise<Page>((resolve,reject)=>{
 		setTimeout(()=>{
-			const foundedPage = PAGES.find(page => page.id === id)
+			const foundedPage = PAGES.find(page => page._id === id)
 			resolve(foundedPage!)
 		},2000)
 	})
@@ -75,7 +75,7 @@ export async function createPage(name:string){
 	return new Promise<Page>((resolve,reject)=>{
 		setTimeout(()=>{
 			const newPage : Page = {
-				id: `p${Math.floor(Math.random()*100)}n${Math.floor(Math.random()*1000)}`,
+				_id: `p${Math.floor(Math.random()*100)}n${Math.floor(Math.random()*1000)}`,
 				name,
 				elements:[]
 			}

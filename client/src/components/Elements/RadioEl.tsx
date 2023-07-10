@@ -1,65 +1,92 @@
-import {Element, ElementType} from '../../models'
-import React from "react";
-import {TextInputField, Text, TagInput} from "evergreen-ui";
-import styled from "@emotion/styled";
-import {Swatch} from "../../theme";
-import {ElementBox} from "../ElementBox";
+import React, {useCallback} from "react";
+import {IconButton, TagInput, TextInputField, TrashIcon} from "evergreen-ui";
+import {ElementBox, Label, Section} from "../ElementBox";
+import {usePageEditMutation, useSinglePageQuery} from "../../routes/page";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {ElementProps} from "./index";
+import {ConditionBox} from "../ConditionBox";
 
-export interface RadioElement extends Omit<Element, 'type'> {
-	type: ElementType.RADIO
-}
+type RadioElementEditForm = { name: string, choices: string[] }
 
-interface RadioElementProps {
-	element: RadioElement
-}
-
-const Box = styled(ElementBox)`
-  background-color: ${Swatch.radioElementColor};
-  display: flex;
-  flex-direction: column;
-  & > .top{
-    display: flex;
-    justify-content: space-between;
-  }
-`
-
-const CustomTextInputField = styled(TextInputField)`
-  background-color:rgba(255,255,255,0.75);
-`
-
-const Label = styled.label`
-  font-size: 14px;
-  font-weight: 500;
-  color: #101840;
-`
-const Section = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-`
-export const RadioEl: React.FC<RadioElementProps> = ({element}) => {
+export const RadioEl: React.FC<ElementProps> = ({elIndex, formRef, onRemove}) => {
+	const {data: page} = useSinglePageQuery()
+	const {mutateAsync: updatePage} = usePageEditMutation();
+	const element = page.elements[elIndex];
 	const [choices, setChoices] = React.useState<string[]>(element.choices || [])
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		getValues,
+		formState: {errors},
+	} = useForm<RadioElementEditForm>({
+		defaultValues: {name: element.name, choices: element.choices}
+	});
+
+	const scrollToView = useCallback(
+		() => {
+			if (formRef.current) {
+				formRef.current.children[elIndex].scrollIntoView({behavior: 'smooth'});
+				formRef.current.children[elIndex].classList.add('pulse');
+				setTimeout(() => formRef.current.children[elIndex].classList.remove('pulse'), 4000)
+			}
+		},
+		[]
+	);
+
+	const submit: SubmitHandler<RadioElementEditForm> = (formData) => {
+		page.elements[elIndex] = {...page.elements[elIndex], ...formData};
+		updatePage({...page}).then(scrollToView)
+	}
+
+	const tagChangeHandler = (values) => {
+		if (values.length === 0)
+			values = ['default option']
+		setValue('choices', values);
+		submit(getValues());
+		setChoices(values)
+	}
+
+	const handleRemove = useCallback((e) => {
+		e.stopPropagation();
+		onRemove(elIndex);
+	}, [])
+
 	return (
-		<Box>
+		<ElementBox elType={element.type} onClick={scrollToView}>
 			<div className="top">
-				<CustomTextInputField
-					label="Input Name"
-					defaultValue={element.name}
-					marginBottom={0}
-				/>
-				<span style={{color:'#a5a5a5',fontSize:'11px'}}>Radio Button</span>
+				<form onSubmit={handleSubmit(submit)}>
+					<TextInputField
+						onClick={(e) => e.stopPropagation()}
+						{...register('name', {required: 'name is required!'})}
+						isInvalid={!!errors!.name}
+						validationMessage={errors!.name?.message}
+						label="Input Name"
+						marginBottom={0}
+						style={{width: 'auto'}}
+					/>
+				</form>
+				<span className="box-type">
+					<IconButton
+						onClick={handleRemove}
+						size='small'
+						icon={TrashIcon} intent="danger"/>
+					Radio Button</span>
 			</div>
 			<Section>
 				<Label>Choices</Label>
 				<TagInput
-					style={{backgroundColor:'rgba(255,255,255,0.75)'}}
-					inputProps={{ placeholder: 'Press "Enter" to add choices...' }}
+					onClick={(e) => e.stopPropagation()}
+					style={{backgroundColor: 'rgba(255,255,255,0.75)'}}
+					inputProps={{placeholder: 'Press "Enter" to add choices...'}}
 					values={choices}
-					onChange={(values) => {
-						setChoices(values)
-					}}
+					onChange={tagChangeHandler}
 				/>
 			</Section>
-		</Box>
+			<Section>
+				<Label>Conditions</Label>
+				<ConditionBox elIndex={elIndex}/>
+			</Section>
+		</ElementBox>
 	)
 }

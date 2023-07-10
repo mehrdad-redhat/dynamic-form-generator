@@ -2,16 +2,17 @@ import {Card as EvergreenCard, Heading, majorScale, Pane} from "evergreen-ui";
 import React from "react";
 import styled from "@emotion/styled";
 import {Swatch} from "../theme";
-import {getPage} from "../fake-data";
-import {Page as PageType} from "../models"
-import {QueryClient, useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
 import Edit from "../components/Edit";
 import {Preview} from "../components/Preview";
+import {PageStateContextProvider} from "../contexts/page.context";
+import {pageService} from "../services/page.service";
+import {Page as PageType} from "../models"
 
 const Container = styled(Pane)`
   display: flex;
-  height: 100vh;
+  height: 100%;
   width: 100%;
 `
 
@@ -20,9 +21,16 @@ const CardWrapper = styled(Pane)`
   align-items: center;
   justify-content: center;
   height: 100%;
-  width: 50%;
   padding: ${majorScale(4)}px;
   background-color: ${Swatch.background};
+
+  &#edit {
+    width: 60%;
+  }
+
+  &#preview {
+    width: 40%;
+  }
 `
 
 const Card = styled(EvergreenCard)`
@@ -35,57 +43,78 @@ const Card = styled(EvergreenCard)`
   border-radius: 8px;
 `
 
-const pageDetailQuery = (id: string) => ({
-	queryKey: ['pages', 'detail', id],
-	queryFn: async (): Promise<PageType> => {
-		const page: PageType = await getPage(id);
-		if (!page) {
-			throw new Response('', {
-				status: 404,
-				statusText: 'Not Found',
-			})
-		}
-		return page
-	},
-})
+export const useSinglePageQuery = () => {
+	const {pageId} = useParams();
+	return useQuery(
+		['currentPage', pageId],
+		() => pageService.getSinglePage(pageId),
+	)
+};
 
-export const loader =
-	(queryClient: QueryClient) =>
-		async ({params}: { params: { pageId: string } }) => {
-			const query = pageDetailQuery(params.pageId)
-			return (
-				queryClient.getQueryData(query.queryKey) ??
-				(await queryClient.fetchQuery(query))
-			)
+export const usePageEditMutation = () => {
+	const queryClient = useQueryClient();
+	const {pageId} = useParams();
+	return useMutation(
+		{
+			mutationFn: (edittedPage: PageType) => pageService.editPage(pageId, {...edittedPage}),
+			onMutate: async (newPage) => {
+				// Optimistically update to the new value
+				let newPageData: PageType = {
+					name: newPage.name,
+					_id: pageId,
+					elements: newPage.elements
+				}
+				queryClient.setQueryData(['currentPage', pageId], newPageData)
+				return {}
+			},
+			onSuccess: (page) => {
+				queryClient.invalidateQueries(['pages']).then();
+				queryClient.invalidateQueries({
+					queryKey: ['currentPage', page._id],
+				}).then();
+			}
 		}
+	)
+
+}
+
 
 const Page: React.FC = () => {
-	const params = useParams();
-	const {data: page} = useQuery(pageDetailQuery(params.pageId!))
-	
+	const {isLoading, data: page} = useSinglePageQuery();
+
+	const formRef = React.useRef<HTMLFormElement>(null);
+
 	return (
-		<Container>
-			<CardWrapper paddingRight='16px !important'>
-				<Card elevation={2}>
-					<Heading size={600}
-					         is='h3'
-					         borderBottom='1px solid #a3a3a3'
-					         marginBottom={majorScale(3)}
-					         paddingBottom={majorScale(3)}>Edit</Heading>
-					{page && <Edit page={page}/>}
-				</Card>
-			</CardWrapper>
-			<CardWrapper paddingLeft='16px !important'>
-				<Card elevation={2}>
-					<Heading size={600}
-					         is='h3'
-					         borderBottom='1px solid #a3a3a3'
-					         marginBottom={majorScale(3)}
-					         paddingBottom={majorScale(3)}>Preview</Heading>
-					{page && <Preview page={page}/>}
-				</Card>
-			</CardWrapper>
-		</Container>
+		<PageStateContextProvider>
+			<Container>
+				<CardWrapper id='edit' paddingRight='16px !important'>
+					<Card elevation={2}>
+						<Heading size={600}
+						         is='h3'
+						         style={{display: 'flex', columnGap: '11px'}}
+						         borderBottom='1px solid #a3a3a3'
+						         marginBottom={majorScale(3)}
+						         paddingBottom={majorScale(3)}>Edit
+							<p style={{lineHeight:"1rem",fontSize: '11px', fontStyle: 'italic', fontWeight: '300', color: 'gray'}}>
+								(click on element boxes to scroll the preview)<br/>
+								(press enter to apply your changes)
+							</p>
+						</Heading>
+						{page && <Edit formRef={formRef}/>}
+					</Card>
+				</CardWrapper>
+				<CardWrapper id='preview' paddingLeft='16px !important'>
+					<Card elevation={2}>
+						<Heading size={600}
+						         is='h3'
+						         borderBottom='1px solid #a3a3a3'
+						         marginBottom={majorScale(3)}
+						         paddingBottom={majorScale(3)}>Preview</Heading>
+						{page && <Preview ref={formRef}/>}
+					</Card>
+				</CardWrapper>
+			</Container>
+		</PageStateContextProvider>
 	);
 };
 
