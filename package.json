@@ -4,9 +4,11 @@
   "description": "It's a NodeJS-ExpressJS api server for dynamic form generator assestment",
   "main": "server.js",
   "scripts": {
-    "server": "pm2 start ecosystem.config.js",
-    "seed": "node server/seed.js",
-    "start:dev": "nodemon server/server.js"
+    "server:prod": "pm2 start ecosystem.config.js",
+    "start-develop": "concurrently \"npm run start-server\" \"npm run start-client\"",
+    "start-server": "nodemon server/server.js",
+    "start-client": "node start-client.js",
+    "seed": "node server/seed.js"
   },
   "author": "Mehrdad Helmi",
   "license": "ISC",
@@ -22,6 +24,7 @@
     "rootpath": "^0.1.2"
   },
   "devDependencies": {
+    "concurrently": "^8.2.0",
     "nodemon": "^2.0.22"
   }
 }
