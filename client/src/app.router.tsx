@@ -20,14 +20,10 @@ export const router = createBrowserRouter([
 				path: 'pages/:pageId',
 				element: <Page/>,
 			},
-			// { TODO: remove it if there is no time
-			//     path: 'pages/:pageId/destroy',
-			//     element: <EditPage />,
-			// },
 		],
 	},
 	{
-		path:'login',
+		path: 'login',
 		element: <Login/>,
 	},
 ])

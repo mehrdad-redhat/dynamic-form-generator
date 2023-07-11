@@ -6,7 +6,6 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
 import Edit from "../components/Edit";
 import {Preview} from "../components/Preview";
-import {PageStateContextProvider} from "../contexts/page.context";
 import {PageService} from "../services/page.service";
 import {Page as PageType} from "../models"
 
@@ -85,36 +84,40 @@ const Page: React.FC = () => {
 	const formRef = React.useRef<HTMLFormElement>(null);
 
 	return (
-		<PageStateContextProvider>
-			<Container>
-				<CardWrapper id='edit' paddingRight='16px !important'>
-					<Card elevation={2}>
-						<Heading size={600}
-						         is='h3'
-						         style={{display: 'flex', columnGap: '11px'}}
-						         borderBottom='1px solid #a3a3a3'
-						         marginBottom={majorScale(3)}
-						         paddingBottom={majorScale(3)}>Edit
-							<p style={{lineHeight:"1rem",fontSize: '11px', fontStyle: 'italic', fontWeight: '300', color: 'gray'}}>
-								(click on element boxes to scroll the preview)<br/>
-								(press enter to apply your changes)
-							</p>
-						</Heading>
-						{page && <Edit formRef={formRef}/>}
-					</Card>
-				</CardWrapper>
-				<CardWrapper id='preview' paddingLeft='16px !important'>
-					<Card elevation={2}>
-						<Heading size={600}
-						         is='h3'
-						         borderBottom='1px solid #a3a3a3'
-						         marginBottom={majorScale(3)}
-						         paddingBottom={majorScale(3)}>Preview</Heading>
-						{page && <Preview ref={formRef}/>}
-					</Card>
-				</CardWrapper>
-			</Container>
-		</PageStateContextProvider>
+		<Container>
+			<CardWrapper id='edit' paddingRight='16px !important'>
+				<Card elevation={2}>
+					<Heading size={600}
+					         is='h3'
+					         style={{display: 'flex', columnGap: '11px'}}
+					         borderBottom='1px solid #a3a3a3'
+					         marginBottom={majorScale(3)}
+					         paddingBottom={majorScale(3)}>Edit
+						<p style={{
+							lineHeight: "1rem",
+							fontSize: '11px',
+							fontStyle: 'italic',
+							fontWeight: '300',
+							color: 'gray'
+						}}>
+							(click on element boxes to scroll the preview)<br/>
+							(press enter to apply your changes)
+						</p>
+					</Heading>
+					{page && <Edit formRef={formRef}/>}
+				</Card>
+			</CardWrapper>
+			<CardWrapper id='preview' paddingLeft='16px !important'>
+				<Card elevation={2}>
+					<Heading size={600}
+					         is='h3'
+					         borderBottom='1px solid #a3a3a3'
+					         marginBottom={majorScale(3)}
+					         paddingBottom={majorScale(3)}>Preview</Heading>
+					{page && <Preview ref={formRef}/>}
+				</Card>
+			</CardWrapper>
+		</Container>
 	);
 };
 

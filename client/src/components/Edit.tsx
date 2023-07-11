@@ -98,26 +98,26 @@ const Edit: React.FC<EditProps> = ({formRef}) => {
 		switch (type) {
 			case ElementType.TEXT:
 				page.elements.push({
-					name: 'new-text-element',
+					name: `new-text-element${Math.floor(Math.random() * 100).toString().padStart(2, "0")}`,
 					type: ElementType.TEXT,
 				})
 				break;
 			case ElementType.CHECKBOX:
 				page.elements.push({
-					name: 'new-checkbox-element',
+					name: `new-checkbox-element${Math.floor(Math.random() * 100).toString().padStart(2, "0")}`,
 					type: ElementType.CHECKBOX,
 				})
 				break;
 			case ElementType.SELECT:
 				page.elements.push({
-					name: 'new-select-element',
+					name: `new-select-element${Math.floor(Math.random() * 100).toString().padStart(2, "0")}`,
 					type: ElementType.SELECT,
-					choices: []
+					choices: ['default option']
 				})
 				break;
 			case ElementType.RADIO:
 				page.elements.push({
-					name: 'new-radio-element',
+					name: `new-radio-element${Math.floor(Math.random() * 100).toString().padStart(2, "0")}`,
 					type: ElementType.RADIO,
 					choices: ['default option']
 				})
@@ -125,14 +125,12 @@ const Edit: React.FC<EditProps> = ({formRef}) => {
 			default:
 				throw new Error('Wrong type')
 		}
-		console.log(formRef)
 		edit({...page}).then(() => {
 			if (formRef)
 				formRef.current.scroll({
 					top: formRef.current.scrollHeight,
 					behavior: "smooth",
 				})
-			console.log(buttonGroupRef)
 			if (buttonGroupRef.current)
 				buttonGroupRef.current.scrollIntoView({behavior: 'smooth'});
 		})

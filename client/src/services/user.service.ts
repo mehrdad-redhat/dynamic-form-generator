@@ -6,8 +6,8 @@ export const userService = {
 	getUserFromLocalStorage
 };
 
-function login({name}) :Promise<User>{
-	return ApiGateway.post(`/users/login`, {name}).then(response =>response.data);
+function login({name}): Promise<User> {
+	return ApiGateway.post(`/users/login`, {name}).then(response => response.data);
 }
 
 function getUserFromLocalStorage() {

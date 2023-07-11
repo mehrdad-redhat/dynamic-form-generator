@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import {ElementType} from "../models";
 import {Swatch} from "../theme";
 
-export const ElementBox = styled.div<{elType?:ElementType}>`
+export const ElementBox = styled.div<{ elType?: ElementType }>`
   border-radius: 6px;
   box-shadow: 0 0 1px rgb(40 126 205 / 30%), 0 0 4px 1px rgb(121 155 185 / 47%);
   padding: 10px;

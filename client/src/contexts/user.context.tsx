@@ -42,9 +42,9 @@ const stateReducer = (state: State, action: Action) => {
 	}
 };
 
-const UserStateContextProvider = ({ children }: StateContextProviderProps) => {
+const UserStateContextProvider = ({children}: StateContextProviderProps) => {
 	const [state, dispatch] = React.useReducer(stateReducer, initialState);
-	const value = { state, dispatch };
+	const value = {state, dispatch};
 	return (
 		<UserStateContext.Provider value={value}>{children}</UserStateContext.Provider>
 	);
@@ -60,4 +60,4 @@ const useUserStateContext = () => {
 	throw new Error(`useStateContext must be used within a UserStateContextProvider`);
 };
 
-export { UserStateContextProvider, useUserStateContext };
+export {UserStateContextProvider, useUserStateContext};

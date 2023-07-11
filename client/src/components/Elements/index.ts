@@ -8,5 +8,5 @@ export {RadioEl} from './RadioEl';
 export type ElementProps = {
 	elIndex: number,
 	formRef: RefObject<HTMLFormElement>,
-	onRemove?:(index: number)=>void
+	onRemove?: (index: number) => void
 }

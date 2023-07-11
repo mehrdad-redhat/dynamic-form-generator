@@ -65,7 +65,7 @@ export const ConditionTypeFrame: React.FC<ConditionTypeFrameProps> = ({children,
 			icon={SmallPlusIcon} intent="success"/>
 		{(children as React.ReactNode[]).length !== 0 ? children : <span className='empty-box'>{emptyBox(cType)}</span>}
 	</Frame>
-	
+
 
 function title(cType: ConditionType) {
 	switch (cType) {

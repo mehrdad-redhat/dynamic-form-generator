@@ -1,16 +1,16 @@
 export enum ElementType {
 	TEXT = "text",
-	CHECKBOX="checkbox",
-	SELECT="select",
-	RADIO="radio"
+	CHECKBOX = "checkbox",
+	SELECT = "select",
+	RADIO = "radio"
 }
 
-export interface Condition{
-	elementName:string;
-	valueToPass:string;
+export interface Condition {
+	elementName: string;
+	valueToPass: string;
 }
 
-export interface Element{
+export interface Element {
 	type: ElementType,
 	name: string,
 	choices?: string[],
@@ -19,21 +19,21 @@ export interface Element{
 	editableIf?: Condition[],
 }
 
-export interface Page{
+export interface Page {
 	readonly _id: string,
 	readonly owner?: string,
 	name: string,
 	elements: Element[],
 }
 
-export interface User{
-	readonly _id:string,
-	name:string,
+export interface User {
+	readonly _id: string,
+	name: string,
 }
 
 
 export enum ConditionType {
-	REQUIRED='requiredIf',
-	VISIBLE='visibleIf',
-	EDITABLE='editableIf',
+	REQUIRED = 'requiredIf',
+	VISIBLE = 'visibleIf',
+	EDITABLE = 'editableIf',
 }

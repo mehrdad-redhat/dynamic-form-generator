@@ -25,7 +25,7 @@ export const SelectEl: React.FC<ElementProps> = ({elIndex, formRef, onRemove}) =
 
 	const scrollToView = useCallback(
 		() => {
-			if (formRef.current) {
+			if (formRef.current.children[elIndex]) {
 				formRef.current.children[elIndex].scrollIntoView({behavior: 'smooth'});
 				formRef.current.children[elIndex].classList.add('pulse');
 				setTimeout(() => formRef.current.children[elIndex].classList.remove('pulse'), 4000)
@@ -59,7 +59,7 @@ export const SelectEl: React.FC<ElementProps> = ({elIndex, formRef, onRemove}) =
 						{...register('name', {required: 'name is required!'})}
 						isInvalid={!!errors!.name}
 						validationMessage={errors!.name?.message}
-						label="Input Name"
+						label="SelectBox Name"
 						marginBottom={0}
 						style={{width: 'auto'}}
 					/>

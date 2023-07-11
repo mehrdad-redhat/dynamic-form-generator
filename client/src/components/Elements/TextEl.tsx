@@ -24,7 +24,7 @@ export const TextEl: React.FC<ElementProps> = ({elIndex, formRef, onRemove}) => 
 
 	const scrollToView = useCallback(
 		() => {
-			if (formRef.current) {
+			if (formRef.current.children[elIndex]) {
 				formRef.current.children[elIndex].scrollIntoView({behavior: 'smooth'});
 				formRef.current.children[elIndex].classList.add('pulse');
 				setTimeout(() => formRef.current.children[elIndex].classList.remove('pulse'), 4000)

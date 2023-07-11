@@ -33,13 +33,13 @@ export const ConditionBox: React.FC<ConditionBoxProps> = ({elIndex}) => {
 		control,
 		handleSubmit,
 		getValues,
-		formState: {errors}
+		setValue,
 	} = useForm<ConditionForm>({
 		defaultValues: {
 			requiredIf: element.requiredIf || [],
 			visibleIf: element.visibleIf || [],
 			editableIf: element.editableIf || [],
-		},mode:'onBlur'
+		}, mode: 'all'
 	});
 	const {fields: requiredFileds, append: requiredAppend, remove: requiredRemove} = useFieldArray({
 		name: "requiredIf",
@@ -54,21 +54,27 @@ export const ConditionBox: React.FC<ConditionBoxProps> = ({elIndex}) => {
 		control
 	});
 	const onSubmit = (data: ConditionForm) => {
-		page.elements[elIndex]={...page.elements[elIndex],...data};
+		page.elements[elIndex] = {...page.elements[elIndex], ...data};
 		updatePage({...page})
 	}
+
 	return (
 		<FormContainer onClick={e => e.stopPropagation()} onSubmit={handleSubmit(onSubmit)}>
 			{
-				element.type===ElementType.TEXT &&
+				element.type === ElementType.TEXT &&
 				<ConditionTypeFrame cType={ConditionType.REQUIRED}
 				                    elType={element.type}
-				                    onAdd={() => requiredAppend({elementName:'',valueToPass:''})}>
-					{requiredFileds.map((field, index) => <ConditionElement key={field.id+'requ'}
+				                    onAdd={() => requiredAppend({elementName: elementsNameList[0], valueToPass: ''})}>
+					{requiredFileds.map((field, index) => <ConditionElement key={field.id + 'requ'}
 					                                                        cType={ConditionType.REQUIRED}
 					                                                        {...{control, index, field}}
 					                                                        onRemove={() => {
 						                                                        requiredRemove(index);
+						                                                        onSubmit(getValues())
+					                                                        }}
+					                                                        onChange={(v) => {
+						                                                        if (v)
+							                                                        setValue(`requiredIf.${index}.elementName`, v)
 						                                                        onSubmit(getValues())
 					                                                        }}
 					                                                        elNameList={elementsNameList}/>)}
@@ -76,24 +82,34 @@ export const ConditionBox: React.FC<ConditionBoxProps> = ({elIndex}) => {
 			}
 			<ConditionTypeFrame cType={ConditionType.VISIBLE}
 			                    elType={element.type}
-			                    onAdd={() => visibleAppend({elementName:'',valueToPass:''})}>
-				{visibleFileds.map((field, index) => <ConditionElement key={field.id+'visible'}
+			                    onAdd={() => visibleAppend({elementName: elementsNameList[0], valueToPass: ''})}>
+				{visibleFileds.map((field, index) => <ConditionElement key={field.id + 'visible'}
 				                                                       cType={ConditionType.VISIBLE}
 				                                                       {...{control, index, field}}
 				                                                       onRemove={() => {
 					                                                       visibleRemove(index);
 					                                                       onSubmit(getValues())
 				                                                       }}
+				                                                       onChange={(v) => {
+					                                                       if (v)
+						                                                       setValue(`visibleIf.${index}.elementName`, v)
+					                                                       onSubmit(getValues())
+				                                                       }}
 				                                                       elNameList={elementsNameList}/>)}
 			</ConditionTypeFrame>
 			<ConditionTypeFrame cType={ConditionType.EDITABLE}
 			                    elType={element.type}
-			                    onAdd={() => editableAppend({elementName:'',valueToPass:''})}>
-				{editableFileds.map((field, index) => <ConditionElement key={field.id+"edit"}
+			                    onAdd={() => editableAppend({elementName: elementsNameList[0], valueToPass: ''})}>
+				{editableFileds.map((field, index) => <ConditionElement key={field.id + "edit"}
 				                                                        cType={ConditionType.EDITABLE}
 				                                                        {...{control, index, field}}
 				                                                        onRemove={() => {
 					                                                        editableRemove(index);
+					                                                        onSubmit(getValues())
+				                                                        }}
+				                                                        onChange={(v) => {
+					                                                        if (v)
+						                                                        setValue(`editableIf.${index}.elementName`, v)
 					                                                        onSubmit(getValues())
 				                                                        }}
 				                                                        elNameList={elementsNameList}/>)}
@@ -146,12 +162,21 @@ const ConditionElementContainer = styled.div`
 type ConditionElementProps = {
 	elNameList: string[],
 	onRemove: () => void,
+	onChange: (value?: string) => void,
 	cType: ConditionType,
 	control, index, field
 }
 
-const ConditionElement: React.FC<ConditionElementProps> = ({cType, elNameList, onRemove, control, index, field}) =>
-	<ConditionElementContainer>
+const ConditionElement: React.FC<ConditionElementProps> = ({
+	                                                           cType,
+	                                                           elNameList,
+	                                                           onRemove,
+	                                                           control,
+	                                                           index,
+	                                                           field,
+	                                                           onChange
+                                                           }) => {
+	return <ConditionElementContainer>
 		<IconButton
 			onClick={() => onRemove()}
 			size='small'
@@ -159,10 +184,11 @@ const ConditionElement: React.FC<ConditionElementProps> = ({cType, elNameList, o
 		<Controller
 			control={control}
 			name={`${cType}.${index}.elementName`}
-			defaultValue={field.elementName!=='' ? field.elementName : null}
+			defaultValue={elNameList[0]}
 			render={({field}) => (
 				<SelectField
 					{...field}
+					onChange={(e) => onChange(e.target.value)}
 					inputWidth="100%"
 					className="custom-select"
 					label="Element Name">
@@ -179,9 +205,12 @@ const ConditionElement: React.FC<ConditionElementProps> = ({cType, elNameList, o
 			render={({field}) => (
 				<TextInputField
 					{...field}
+					onKeyUp={() => onChange()}
+					autoComplete="off"
 					inputWidth="100%"
 					className="custom-select"
 					label="Value To Pass"/>
 			)}
 		/>
 	</ConditionElementContainer>
+}

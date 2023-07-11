@@ -35,7 +35,6 @@ const Root: React.FC = () => {
 			elements: []
 		});
 		queryClient.invalidateQueries(['pages']).then();
-		console.log(newPage);
 		navigate(`pages/${newPage._id}`);
 	}
 
